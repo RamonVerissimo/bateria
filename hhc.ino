@@ -8,10 +8,10 @@ int estado(int valor) {
   } else if (valor < 200) {
     return 4;  // totalmente aberto
   }
-  return 0;  // Valor de fallback (normalmente não vai chagar nessa condição)
+  return 1;  // Valor de fallback (normalmente não chega nessa condição)
 }
 
-void hihatc() {
+void fechamento() {
 
   sensorValueCurr = estado(nota);  // recebe 1, 2, 3 ou 4.
 
@@ -74,5 +74,5 @@ void chimbal() {
     }
   }
 
-  hihatc();  // função para detectar fechamento do chimbal
+  fechamento();  // função para detectar fechamento do chimbal
 }
