@@ -40,7 +40,7 @@ HelloDrum surdo(7);
 void setup() {
 
   MIDI.begin(1);
-  // Serial.begin(115200);
+  Serial.begin(115200);
   pinMode(A0, INPUT);
   pinMode(A1, INPUT);
   pinMode(A2, INPUT);
@@ -69,7 +69,7 @@ void loop() {
   tom2.singlePiezo(pad[0], pad[1], pad[2], pad[3]);
   surdo.singlePiezo(pad[0], pad[1], pad[2], pad[3]);
 
-  chimbal();  //execua som do chimbal e do controlador
+  chimbal();  //executa som do chimbal e do controlador
 
   //MIDI signals are transmitted with this IF statement.
   //For each piezo, one IF statement is required
