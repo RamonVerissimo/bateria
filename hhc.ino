@@ -1,19 +1,21 @@
 int estado(int valor) {
   if (valor >= 900) {
     return 1;  // totalmente fechado
-  } else if (valor < 900 && valor >= 400) {
+  } else if (valor < 900 && valor >= 700) {
     return 2;  // quase fechado
-  } else if (valor < 400 && valor >= 200) {
+  } else if (valor < 700 && valor >= 500) {
     return 3;  // quase aberto
-  } else if (valor < 200) {
-    return 4;  // totalmente aberto
-  }
-  return 1;  // Valor de fallback (normalmente não chega nessa condição)
+  } else if (valor < 500 && valor >= 150) {
+    return 4;  // quase quase aberto
+  } else if ( valor < 150){
+    return 5; // totalmente aberto
+  } else
+  return 0;  // Valor de fallback (normalmente não vai chagar nessa condição)
 }
 
-void fechamento() {
-
-  sensorValueCurr = estado(nota);  // recebe 1, 2, 3 ou 4.
+void hihatc() {
+  nota = analogRead(A0);
+  sensorValueCurr = estado(nota);  // recebe 1, 2, 3, 4 ou 5.
 
   if (sensorValuePrev == 2 && sensorValueCurr == 1) {
     // novoValor = analogRead(A0);
@@ -30,49 +32,43 @@ void fechamento() {
 }
 
 void chimbal() {
+  // Quando o controlador do chimbal estiver funcionando, remover as duas linhas abaixo
+  // e descomentar os demais ifs
+  // MIDI.sendNoteOn(50, hihat.velocity, 1);  //(note, velocity, channel)
+  // MIDI.sendNoteOff(50, 0, 1);
 
-  valorSensor = analogRead(A1);  // Piezo do chimbal deve estar conectado na entrada A1.
 
-  if (valorSensor > sensibilidade) {
-    
-    nota = analogRead(A0);
-    valorSensor = valorSensor / 8;  //Limita o valor lido até 127
+  nota = analogRead(A0);  // O controlador do chimbal deve estar ligado na porta A0
 
-    switch (estado(nota)) {
-      case 1:
-        Serial.println(valorSensor);
-        MIDI.sendNoteOn(50, valorSensor, 1);
-        // delay(5);  // Pequeno delay para permitir que a mensagem NoteOn seja processada
-        MIDI.sendNoteOff(50, 0, 1);
-        delay(10);
-        // Serial.println("totalmente fechado"); ajustar os valores quando o pedal for montado.
-        break;
+  switch (estado(nota)) {
+    case 1:
+      MIDI.sendNoteOn(50, hihat.velocity, 1);  //(note, velocity, channel)
+      MIDI.sendNoteOff(50, 0, 1);
+      // Serial.println("totalmente fechado"); ajustar os valores quando o pedal for montado.
+      break;
 
-      case 2:
-        MIDI.sendNoteOn(54, valorSensor, 1);
-        // delay(5);
-        MIDI.sendNoteOff(54, 0, 1);
-        delay(10);
-        // Serial.println("quase fechado");
-        break;
+    case 2:
+      MIDI.sendNoteOn(52, hihat.velocity, 1);  //(note, velocity, channel)
+      MIDI.sendNoteOff(52, 0, 1);
+      // Serial.println("quase fechado");
+      break;
 
-      case 3:
-        MIDI.sendNoteOn(55, valorSensor, 1);
-        // delay(5);
-        MIDI.sendNoteOff(55, 0, 1);
-        delay(10);
-        // Serial.println("quase aberto");
-        break;
+    case 3:
+      MIDI.sendNoteOn(54, hihat.velocity, 1);  //(note, velocity, channel)
+      MIDI.sendNoteOff(54, 0, 1);
+      // Serial.println("quase aberto");
+      break;
 
-      case 4:
-        MIDI.sendNoteOn(57, valorSensor, 1);
-        // delay(5);
-        MIDI.sendNoteOff(57, 0, 1);
-        delay(10);
-        // Serial.println("totalmente aberto");
-        break;
-    }
+    case 4:
+      MIDI.sendNoteOn(56, hihat.velocity, 1);  //(note, velocity, channel)
+      MIDI.sendNoteOff(56, 0, 1);
+      // Serial.println("totalmente aberto");
+      break;
+
+    case 5:
+      MIDI.sendNoteOn(57, hihat.velocity, 1);  //(note, velocity, channel)
+      MIDI.sendNoteOff(57, 0, 1);
+      // Serial.println("totalmente aberto");
+      break;
   }
-
-  fechamento();  // função para detectar fechamento do chimbal
 }
